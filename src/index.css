@@ -1,0 +1,374 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #f1f6fc;
+    color: #1e293b;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html.dark body {
+    background-color: #060d1a;
+    color: #e2e8f0;
+  }
+}
+
+/* Custom subtle circuit and tech patterns (Light Mode) */
+.tech-grid-pattern {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(14, 165, 233, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 165, 233, 0.07) 1px, transparent 1px);
+}
+
+.tech-dots-pattern {
+  background-image: radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.subtle-circuit-bg {
+  background-color: #f0f6fd;
+  background-image:
+    radial-gradient(at 10% 20%, rgba(2, 132, 199, 0.06) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(225, 29, 72, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+    radial-gradient(at 20% 80%, rgba(14, 165, 233, 0.06) 0px, transparent 50%);
+}
+
+.hero-mesh-gradient {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(225, 29, 72, 0.09) 0%, transparent 40%),
+    radial-gradient(circle at 50% 60%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #edf5fd 0%, #f6fafd 50%, #eef5fc 100%);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.dark-glass-card {
+  background: rgba(11, 29, 58, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* ==============================================================
+   BEAUTIFUL DARK THEME COMBINATION (Anti-glare, Midnight Obsidian)
+   ============================================================== */
+
+/* Dark Mode Tech Patterns */
+.dark .tech-grid-pattern {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+}
+
+.dark .tech-dots-pattern {
+  background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 1px);
+}
+
+.dark .subtle-circuit-bg {
+  background-color: #060d1a;
+  background-image:
+    radial-gradient(at 10% 20%, rgba(2, 132, 199, 0.12) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(225, 29, 72, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(16, 185, 129, 0.07) 0px, transparent 50%),
+    radial-gradient(at 20% 80%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+}
+
+.dark .hero-mesh-gradient {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(225, 29, 72, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 50% 60%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #050b16 0%, #071020 50%, #060c18 100%);
+}
+
+.dark .glass-card {
+  background: rgba(12, 24, 46, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* Sections & Backgrounds in Dark Mode */
+.dark section.bg-slate-50\/60,
+.dark section.bg-slate-50\/70,
+.dark section.bg-slate-50,
+.dark .bg-slate-50\/60,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-50\/80,
+.dark .bg-\[\#f0f6fd\],
+.dark .bg-\[\#f1f6fc\] {
+  background-color: #060d1a !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+.dark .bg-white {
+  background-color: #0b172c !important;
+  border-color: rgba(56, 189, 248, 0.15) !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #081222 !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #0e1e36 !important;
+  border-color: rgba(51, 65, 85, 0.8) !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .bg-white\/90,
+.dark .bg-white\/95 {
+  background-color: rgba(7, 14, 28, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.15) !important;
+}
+
+/* Typography High-Contrast in Dark Mode */
+.dark .text-\[\#0b1d3a\],
+.dark .text-\[\#071224\],
+.dark .text-\[\#071329\] {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-900,
+.dark .text-gray-900 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-800,
+.dark .text-gray-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700,
+.dark .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-600,
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500,
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-400,
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+/* Border adjustments in Dark Mode */
+.dark .border-slate-200,
+.dark .border-slate-200\/80,
+.dark .border-slate-200\/90,
+.dark .border-slate-200\/60 {
+  border-color: rgba(56, 189, 248, 0.14) !important;
+}
+
+.dark .border-slate-100 {
+  border-color: rgba(56, 189, 248, 0.08) !important;
+}
+
+/* Card Shadows in Dark Mode */
+.dark .shadow-card-soft {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px -5px rgba(14, 165, 233, 0.05) !important;
+}
+
+.dark .shadow-card-hover:hover {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.85), 0 0 25px -5px rgba(14, 165, 233, 0.25) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+/* Rose / Red Badges & Text (e.g. Disqualification Clause, deadlines) */
+.dark .text-rose-950,
+.dark .text-rose-900,
+.dark .text-rose-800,
+.dark .text-red-950,
+.dark .text-red-900,
+.dark .text-red-800 {
+  color: #fecdd3 !important;
+}
+
+.dark .text-rose-700,
+.dark .text-rose-600,
+.dark .text-red-700,
+.dark .text-red-600 {
+  color: #fb7185 !important;
+}
+
+.dark .bg-rose-50,
+.dark .bg-rose-100,
+.dark .bg-red-50 {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  color: #fda4af !important;
+}
+
+/* Amber / Yellow Badges & Text (Rules warnings, notices, architecture notes) */
+.dark .text-amber-950,
+.dark .text-amber-900,
+.dark .text-amber-800,
+.dark .text-yellow-950,
+.dark .text-yellow-900 {
+  color: #fef08a !important;
+}
+
+.dark .text-amber-700,
+.dark .text-amber-600 {
+  color: #fcd34d !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-amber-50\/80,
+.dark .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #fde68a !important;
+}
+
+/* Sky / Blue Badges & Text */
+.dark .text-sky-950,
+.dark .text-sky-900,
+.dark .text-sky-800,
+.dark .text-blue-950,
+.dark .text-blue-900,
+.dark .text-blue-800 {
+  color: #bae6fd !important;
+}
+
+.dark .text-sky-700,
+.dark .text-sky-600,
+.dark .text-blue-700,
+.dark .text-blue-600 {
+  color: #38bdf8 !important;
+}
+
+.dark .bg-sky-50,
+.dark .bg-sky-50\/70,
+.dark .bg-sky-100,
+.dark .bg-sky-100\/70,
+.dark .bg-sky-100\/80,
+.dark .bg-blue-50 {
+  background-color: rgba(14, 165, 233, 0.15) !important;
+  border-color: rgba(14, 165, 233, 0.35) !important;
+  color: #7dd3fc !important;
+}
+
+/* Emerald / Green Badges & Text (Datasets, Eligibility, Evaluation) */
+.dark .text-emerald-950,
+.dark .text-emerald-900,
+.dark .text-emerald-800,
+.dark .text-green-950,
+.dark .text-green-900,
+.dark .text-green-800 {
+  color: #a7f3d0 !important;
+}
+
+.dark .text-emerald-700,
+.dark .text-emerald-600 {
+  color: #34d399 !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-emerald-50\/70,
+.dark .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #6ee7b7 !important;
+}
+
+/* Indigo & Purple Badges & Text */
+.dark .text-indigo-950,
+.dark .text-indigo-900,
+.dark .text-indigo-800 {
+  color: #c7d2fe !important;
+}
+
+.dark .text-indigo-700,
+.dark .text-indigo-600 {
+  color: #818cf8 !important;
+}
+
+.dark .bg-indigo-50,
+.dark .bg-indigo-100 {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  color: #c7d2fe !important;
+}
+
+.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+  color: #e9d5ff !important;
+}
+
+.dark .bg-teal-50 {
+  background-color: rgba(20, 184, 166, 0.15) !important;
+  border-color: rgba(20, 184, 166, 0.35) !important;
+  color: #99f6e4 !important;
+}
+
+/* Modals & Dialogs in dark mode */
+.dark .bg-white.rounded-3xl,
+.dark .bg-white.rounded-2xl {
+  background-color: #0c182c !important;
+  border-color: rgba(56, 189, 248, 0.2) !important;
+}
+
+/* Accordions and FAQs in dark mode */
+.dark .border-slate-200.rounded-2xl,
+.dark .border-slate-200.rounded-xl {
+  border-color: rgba(56, 189, 248, 0.15) !important;
+}
+
+/* Custom scrollbar (Light & Dark) */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #060d1a !important;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e3a5f !important;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #0284c7 !important;
+}

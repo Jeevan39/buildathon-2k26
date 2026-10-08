@@ -1,0 +1,356 @@
+// Prisma Schema for Buildathon 2.0 – 2K26 Hackathon Management System
+// Primary Database: PostgreSQL (with SQLite compatibility for local dev)
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleType {
+  SUPER_ADMIN
+  EVENT_ADMIN
+  CONTENT_MANAGER
+  JUDGE
+  MENTOR
+  VIEWER
+}
+
+enum EventStatus {
+  DRAFT
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  EVENT_LIVE
+  EVENT_COMPLETED
+}
+
+enum PriorityLevel {
+  NORMAL
+  IMPORTANT
+  URGENT
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  VERIFICATION_REQUIRED
+  REFUNDED
+  WAIVED
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  REJECTED
+  FINALIST
+}
+
+enum CertificateType {
+  PARTICIPANT
+  WINNER
+  RUNNER_UP
+  MENTOR
+  JUDGE
+  VOLUNTEER
+  ORGANIZER
+}
+
+model User {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  phone         String?
+  passwordHash  String
+  role          RoleType     @default(VIEWER)
+  isActive      Boolean      @default(true)
+  lastLogin     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  participant   Participant?
+  judgeProfile  Judge?
+  mentorProfile Mentor?
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model EventSetting {
+  id                    String      @id @default(uuid())
+  name                  String      @default("BUILDATHON 2.0 – 2K26")
+  shortName             String      @default("Buildathon 2.0")
+  edition               String      @default("2.0")
+  year                  String      @default("2K26")
+  tagline               String      @default("INNOVATE. CODE. IMPACT.")
+  theme                 String
+  description           String
+  organizer             String
+  venue                 String
+  startDate             DateTime
+  endDate               DateTime
+  durationHours         Int         @default(24)
+  prizePoolAmount       Int         @default(30000)
+  registrationFeeAmount Int         @default(500)
+  registrationDeadline  DateTime
+  registrationUrl       String
+  status                EventStatus @default(REGISTRATION_OPEN)
+  updatedAt             DateTime    @updatedAt
+
+  @@map("event_settings")
+}
+
+model Domain {
+  id               String             @id @default(uuid())
+  domainNumber     String             @unique
+  name             String             @unique
+  shortDescription String
+  longDescription  String?
+  iconName         String
+  accentColor      String             @default("from-sky-500 to-blue-600")
+  displayOrder     Int                @default(1)
+  status           ContentStatus      @default(PUBLISHED)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  problems         ProblemStatement[]
+  teams            Team[]
+
+  @@map("domains")
+}
+
+model ProblemStatement {
+  id                 String        @id @default(uuid())
+  problemCode        String        @unique
+  slug               String        @unique
+  title              String
+  domainId           String
+  domain             Domain        @relation(fields: [domainId], references: [id])
+  shortDescription   String
+  background         String?
+  problemDescription String?
+  expectedOutcome    String?
+  requirements       String[]      @default([])
+  constraints        String[]      @default([])
+  resources          String[]      @default([])
+  difficulty         String?       @default("Intermediate")
+  displayOrder       Int           @default(1)
+  status             ContentStatus @default(PUBLISHED)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  teams              Team[]
+  submissions        Submission[]
+
+  @@index([problemCode])
+  @@index([domainId])
+  @@map("problem_statements")
+}
+
+model Participant {
+  id                 String         @id @default(uuid())
+  userId             String?        @unique
+  user               User?          @relation(fields: [userId], references: [id])
+  fullName           String
+  email              String         @unique
+  phone              String
+  collegeName        String
+  department         String
+  year               String
+  studentId          String?
+  githubUrl          String?
+  linkedinUrl        String?
+  registrationStatus String         @default("CONFIRMED")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  teamMemberships    TeamMember[]
+  certificates       Certificate[]
+
+  @@index([email])
+  @@index([collegeName])
+  @@map("participants")
+}
+
+model Team {
+  id                 String            @id @default(uuid())
+  teamCode           String            @unique
+  teamName           String
+  leaderId           String
+  domainId           String?
+  domain             Domain?           @relation(fields: [domainId], references: [id])
+  problemId          String?
+  problem            ProblemStatement? @relation(fields: [problemId], references: [id])
+  paymentStatus      PaymentStatus     @default(PENDING)
+  submissionStatus   SubmissionStatus  @default(DRAFT)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  members            TeamMember[]
+  submission         Submission?
+  evaluations        Evaluation[]
+  judgeAssignments   TeamJudge[]
+
+  @@index([teamCode])
+  @@index([paymentStatus])
+  @@index([submissionStatus])
+  @@map("teams")
+}
+
+model TeamMember {
+  id            String      @id @default(uuid())
+  teamId        String
+  team          Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  role          String      @default("MEMBER") // TEAM_LEADER or MEMBER
+  joinedAt      DateTime    @default(now())
+
+  @@unique([teamId, participantId])
+  @@map("team_members")
+}
+
+model Submission {
+  id           String           @id @default(uuid())
+  teamId       String           @unique
+  team         Team             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  problemId    String
+  problem      ProblemStatement @relation(fields: [problemId], references: [id])
+  projectTitle String
+  description  String
+  githubUrl    String
+  demoUrl      String?
+  status       SubmissionStatus @default(SUBMITTED)
+  submittedAt  DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  files        SubmissionFile[]
+  evaluations  Evaluation[]
+
+  @@index([status])
+  @@map("submissions")
+}
+
+model SubmissionFile {
+  id           String     @id @default(uuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  fileName     String
+  storagePath  String
+  fileSize     Int
+  mimeType     String
+  uploadedAt   DateTime   @default(now())
+
+  @@map("submission_files")
+}
+
+model Judge {
+  id           String        @id @default(uuid())
+  userId       String?       @unique
+  user         User?         @relation(fields: [userId], references: [id])
+  name         String
+  designation  String
+  organization String
+  expertise    String?
+  email        String        @unique
+  phone        String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+
+  assignments  TeamJudge[]
+  evaluations  Evaluation[]
+
+  @@map("judges")
+}
+
+model TeamJudge {
+  id        String   @id @default(uuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  judgeId   String
+  judge     Judge    @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  round     String   @default("ROUND_1")
+  assignedAt DateTime @default(now())
+
+  @@unique([teamId, judgeId, round])
+  @@map("team_judges")
+}
+
+model Evaluation {
+  id                 String      @id @default(uuid())
+  teamId             String
+  team               Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  judgeId            String
+  judge              Judge       @relation(fields: [judgeId], references: [id])
+  submissionId       String?
+  submission         Submission? @relation(fields: [submissionId], references: [id])
+  round              String      @default("ROUND_1")
+  innovationScore    Int         @default(0) // 0-10
+  functionalityScore Int         @default(0) // 0-10
+  executionScore     Int         @default(0) // 0-10
+  impactScore        Int         @default(0) // 0-10
+  totalScore         Int         @default(0)
+  comments           String?
+  isSubmitted        Boolean     @default(false)
+  submittedAt        DateTime?
+  createdAt          DateTime    @default(now())
+
+  @@unique([teamId, judgeId, round])
+  @@map("evaluations")
+}
+
+model Certificate {
+  id               String          @id @default(uuid())
+  verificationCode String          @unique
+  participantId    String
+  participant      Participant     @relation(fields: [participantId], references: [id])
+  type             CertificateType @default(PARTICIPANT)
+  issueDate        DateTime        @default(now())
+  certificateUrl   String?
+
+  @@index([verificationCode])
+  @@map("certificates")
+}
+
+model Announcement {
+  id           String        @id @default(uuid())
+  title        String
+  shortMessage String
+  fullMessage  String?
+  priority     PriorityLevel @default(NORMAL)
+  linkUrl      String?
+  linkText     String?
+  publishDate  DateTime      @default(now())
+  expiryDate   DateTime?
+  status       ContentStatus @default(PUBLISHED)
+
+  @@index([status])
+  @@map("announcements")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  adminName String
+  action    String
+  module    String
+  details   String
+  timestamp DateTime @default(now())
+
+  @@index([timestamp])
+  @@map("audit_logs")
+}
