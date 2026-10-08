@@ -56,7 +56,8 @@ This is a personal/experimental project and is not intended to represent the off
 ### Deployment
 
 - Netlify
-
+🌐 Live Demo
+https://buildathon2k26.netlify.app/
 ---
 
 ## 📁 Project Structure
